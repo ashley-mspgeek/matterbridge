@@ -154,7 +154,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 	// Add our parent id if it exists, and if it's not referring to a message in another channel
 	if ref := m.MessageReference; ref != nil && ref.ChannelID == m.ChannelID {
 		rmsg.ParentID = ref.MessageID
-		b.Log.Infof("<= We believe this is a reply, not a thread")
+
 	}
 
 	if rmsg.ParentID == "" {
