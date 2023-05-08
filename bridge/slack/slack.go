@@ -558,13 +558,26 @@ func (b *Bslack) prepareMessageOptions(msg *config.Message) []slack.MsgOption {
 	var attachments []slack.Attachment
 	// add file attachments
 	attachments = append(attachments, b.createAttach(msg.Extra)...)
-	// add slack attachments (from another slack bridge) if msg.Extra["forwarded_message"] does not exists
+	// add slack attachments (from another slack bridge)
 	if msg.Extra != nil && msg.Extra["forwarded_message"] == nil {
 		for _, attach := range msg.Extra[sSlackAttachment] {
 			attachments = append(attachments, attach.([]slack.Attachment)...)
 		}
 	}
-	// add forwarded message attachment when msg.Extra["forwarded_message"] exists
+	// add a manual attachment if the text contains three pipes (|||)
+	if strings.Contains(msg.Text, "|||") {
+		//split the text based on three pipes, use the first section as the author name and the second as the message, use the final as the message text.
+		splitText := strings.Split(msg.Text, "|||")
+		attachment := slack.Attachment{
+			AuthorName: "@" + splitText[0] + " said:",
+			Text:       splitText[1],
+			Pretext:    splitText[2],
+			AuthorIcon: splitText[3],
+			Color:      "#f58220",
+		}
+		msg.Text = splitText[1]
+		attachments = append(attachments, attachment)
+	}
 
 	var opts []slack.MsgOption
 	opts = append(opts,

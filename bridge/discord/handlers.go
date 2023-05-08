@@ -158,21 +158,12 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		if ref := m.MessageReference; ref != nil && ref.ChannelID == m.ChannelID {
 			if m.ReferencedMessage != nil {
 				authorName := m.ReferencedMessage.Author.Username
+				authorIcon := m.ReferencedMessage.Author.Avatar
 				originalMessageContent := m.ReferencedMessage.Content
-				if rmsg.Extra == nil {
-					rmsg.Extra = make(map[string][]interface{})
-				}
-				rmsg.Extra["forwarded_message"] = []interface{}{
-					map[string]string{
-						"original_message": originalMessageContent,
-						"author_name":      authorName,
-					},
-				}
+				rmsg.Text = authorName + "|||" + originalMessageContent + "|||" + rmsg.Text + "|||" + authorIcon
 				// Store the original message content and author's name in rmsg.Extra
 
 			}
-
-			rmsg.Text = rmsg.Text + "\n https://kelvinsamazin-w5x4656.slack.com/archives/C05774065EU/p1683575338875839"
 		}
 	}
 
