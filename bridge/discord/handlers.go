@@ -163,7 +163,9 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 			b.Log.Errorf("Error fetching channel: %v", err)
 		} else {
 			if channel.Type == discordgo.ChannelTypeGuildNewsThread || channel.Type == discordgo.ChannelTypeGuildPublicThread || channel.Type == discordgo.ChannelTypeGuildPrivateThread {
-				rmsg.ParentID = "ID:" + channel.ParentID
+				rmsg.ParentID = channel.ID
+				rmsg.Channel = "ID:" + channel.ParentID
+				rmsg.ThreadID = m.ChannelID
 			}
 		}
 	}
