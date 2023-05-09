@@ -157,10 +157,10 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		rmsg.ThreadID = ref.MessageID
 		if ref := m.MessageReference; ref != nil && ref.ChannelID == m.ChannelID {
 			if m.ReferencedMessage != nil {
-				authorName := m.ReferencedMessage.Author.Username
-				authorIcon := m.ReferencedMessage.Author.Avatar
+				authorName := "@" + m.ReferencedMessage.Author.Username
+				authorIcon := "https://cdn.discordapp.com/avatars/" + m.ReferencedMessage.Author.ID + "/" + m.ReferencedMessage.Author.Avatar + ".jpg"
 				originalMessageContent := m.ReferencedMessage.Content
-				rmsg.Text = authorName + "|||" + originalMessageContent + "|||" + rmsg.Text + "|||" + authorIcon
+				rmsg.Text = authorName + "|||" + originalMessageContent + "|||" + rmsg.Text + "|||" + authorIcon + "|||#ID:" + m.ReferencedMessage.ChannelID + "|||" + m.ReferencedMessage.Timestamp.Local().Format("2006-01-02 15:04:05") 
 				// Store the original message content and author's name in rmsg.Extra
 
 			}

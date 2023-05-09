@@ -564,16 +564,19 @@ func (b *Bslack) prepareMessageOptions(msg *config.Message) []slack.MsgOption {
 			attachments = append(attachments, attach.([]slack.Attachment)...)
 		}
 	}
+
 	// add a manual attachment if the text contains three pipes (|||)
 	if strings.Contains(msg.Text, "|||") {
 		//split the text based on three pipes, use the first section as the author name and the second as the message, use the final as the message text.
 		splitText := strings.Split(msg.Text, "|||")
+		b.Log.Infof("Split text: %s", splitText)
 		attachment := slack.Attachment{
-			AuthorName: "@" + splitText[0] + " said:",
+			AuthorName: splitText[0] + " said:",
 			Text:       splitText[1],
 			Pretext:    splitText[2],
 			AuthorIcon: splitText[3],
-			Color:      "#f58220",
+			Footer:     "Posted in " + splitText[4] + " at " + splitText[5],
+			Color:      "#D0D0D0",
 		}
 		msg.Text = splitText[1]
 		attachments = append(attachments, attachment)

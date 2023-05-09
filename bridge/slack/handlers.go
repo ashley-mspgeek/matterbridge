@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html"
 	"time"
+
 	"github.com/KelvinTegelaar/matterbridge/bridge/config"
 	"github.com/KelvinTegelaar/matterbridge/bridge/helper"
 	"github.com/slack-go/slack"
@@ -31,43 +32,44 @@ func (b *Bslack) handleSlack() {
 			b.Log.Debugf("<= Sending message from %s on %s to gateway", message.Username, b.Account)
 			// cleanup the message
 			// Access the Extra field of the message object
-// Access the Extra field of the message object
-extra := message.Extra
+			// Access the Extra field of the message object
+			extra := message.Extra
 
-// Access the file field of the Extra map
-files := extra["file"]
+			// Access the file field of the Extra map
+			files := extra["file"]
 
-// Check if files slice is not empty
-if len(files) > 0 {
-    // Type-assert the first element of the file slice to be of type config.FileInfo
-    firstFile, ok := files[0].(config.FileInfo)
-    if ok {
-        // Check if Comment field is not empty
-        if len(firstFile.Comment) > 0 {
-            firstComment := firstFile.Comment
-            message.Text = firstComment
-        }
-    }
-}
+			// Check if files slice is not empty
+			if len(files) > 0 {
+				// Type-assert the first element of the file slice to be of type config.FileInfo
+				firstFile, ok := files[0].(config.FileInfo)
+				if ok {
+					// Check if Comment field is not empty
+					if len(firstFile.Comment) > 0 {
+						firstComment := firstFile.Comment
+						message.Text = firstComment
+					}
+				}
+			}
 
-// Check if files slice is not empty
-if len(files) > 0 {
-    // Loop through the files slice
-    for i := range files {
-        // Type-assert the element of the file slice to be of type config.FileInfo
-        file, ok := files[i].(config.FileInfo)
-        if ok {
-            // Clear the Comment field
-            file.Comment = ""
-            // Update the files slice with the updated file
-            files[i] = file
-        }
-    }
+			// Check if files slice is not empty
+			if len(files) > 0 {
+				// Loop through the files slice
+				for i := range files {
+					// Type-assert the element of the file slice to be of type config.FileInfo
+					file, ok := files[i].(config.FileInfo)
+					if ok {
+						// Clear the Comment field
+						file.Comment = ""
+						// Update the files slice with the updated file
+						files[i] = file
+					}
+				}
 
-    // Update the Extra map with the updated files slice
-    message.Extra["file"] = files
-}
-         	message.Text = b.replaceMention(message.Text)
+				// Update the Extra map with the updated files slice
+				message.Extra["file"] = files
+			}
+
+			message.Text = b.replaceMention(message.Text)
 			message.Text = b.replaceSpacesInMentions(message.Text)
 			message.Text = b.replaceVariable(message.Text)
 			message.Text = b.replaceURL(message.Text)
@@ -227,19 +229,19 @@ func (b *Bslack) filesCached(files []slack.File) bool {
 // handleMessageEvent handles the message events. Together with any called sub-methods,
 // this method implements the following event processing pipeline:
 //
-// 1. Check if the message should be ignored.
-//    NOTE: This is not actually part of the method below but is done just before it
-//          is called via the 'skipMessageEvent()' method.
-// 2. Populate the Matterbridge message that will be sent to the router based on the
-//    received event and logic that is common to all events that are not skipped.
-// 3. Detect and handle any message that is "status" related (think join channel, etc.).
-//    This might result in an early exit from the pipeline and passing of the
-//    pre-populated message to the Matterbridge router.
-// 4. Handle the specific case of messages that edit existing messages depending on
-//    configuration.
-// 5. Handle any attachments of the received event.
-// 6. Check that the Matterbridge message that we end up with after at the end of the
-//    pipeline is valid before sending it to the Matterbridge router.
+//  1. Check if the message should be ignored.
+//     NOTE: This is not actually part of the method below but is done just before it
+//     is called via the 'skipMessageEvent()' method.
+//  2. Populate the Matterbridge message that will be sent to the router based on the
+//     received event and logic that is common to all events that are not skipped.
+//  3. Detect and handle any message that is "status" related (think join channel, etc.).
+//     This might result in an early exit from the pipeline and passing of the
+//     pre-populated message to the Matterbridge router.
+//  4. Handle the specific case of messages that edit existing messages depending on
+//     configuration.
+//  5. Handle any attachments of the received event.
+//  6. Check that the Matterbridge message that we end up with after at the end of the
+//     pipeline is valid before sending it to the Matterbridge router.
 func (b *Bslack) handleMessageEvent(ev *slack.MessageEvent) (*config.Message, error) {
 	rmsg, err := b.populateReceivedMessage(ev)
 	if err != nil {
@@ -338,11 +340,11 @@ func (b *Bslack) handleAttachments(ev *slack.MessageEvent, rmsg *config.Message)
 		for i, attach := range ev.Attachments {
 			if attach.Text != "" {
 				if attach.Title != "" {
-						rmsg.Text = getMessageTitle(&ev.Attachments[i])
+					rmsg.Text = getMessageTitle(&ev.Attachments[i])
 
 				}
 				rmsg.Text += attach.Text
-			    rmsg.Text = b.replaceMention(attach.Text)
+				rmsg.Text = b.replaceMention(attach.Text)
 
 				if attach.Footer != "" {
 					rmsg.Text += "\n\n" + attach.Footer

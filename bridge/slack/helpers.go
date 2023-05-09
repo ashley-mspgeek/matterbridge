@@ -5,11 +5,12 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
 	"github.com/KelvinTegelaar/matterbridge/bridge/config"
+
 	//"github.com/KelvinTegelaar/matterbridge/bridge/discord"
 	"github.com/sirupsen/logrus"
 	"github.com/slack-go/slack"
-
 )
 
 // populateReceivedMessage shapes the initial Matterbridge message that we will forward to the
@@ -158,6 +159,7 @@ func (b *Bslack) replaceMention(text string) string {
 		return "@" + strings.ReplaceAll(username, " ", "-")
 	})
 }
+
 // @see https://api.slack.com/docs/message-formatting#linking_to_channels_and_users
 func (b *Bslack) replaceChannel(text string) string {
 
