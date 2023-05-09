@@ -485,18 +485,14 @@ func (gw *Gateway) SendMessage(
 	if msg.ParentID == "" && rmsg.ParentID != "" {
 		msg.ParentID = config.ParentIDNotFound
 	}
-	if msg.ParentID != "" && dest.Protocol == "discord" {
-		msg.Channel = msg.ParentID
-	}
 
 	msg.ThreadID = gw.getDestMsgID(canonicalThreadMsgID, dest, channel)
 	if msg.ThreadID == "" {
 		msg.ThreadID = strings.Replace(canonicalThreadMsgID, dest.Protocol+" ", "", 1)
 	}
-	//if the parent id is set, replace the channel id with the parent id, but only when the destination is discord, because it's actually a thread.
 
 	if msg.ThreadID == "" && rmsg.ParentID != "" {
-		msg.ThreadID = config.ParentIDNotFound
+		//msg.ThreadID = config.ParentIDNotFound
 	}
 
 	drop, err := gw.modifyOutMessageTengo(rmsg, &msg, dest)

@@ -63,17 +63,26 @@ func New(session *discordgo.Session, guild string, title string, autoCreate bool
 }
 
 // Send transmits a message to the given channel with the provided webhook data, and waits until Discord responds with message data.
-func (t *Transmitter) Send(channelID string, params *discordgo.WebhookParams) (*discordgo.Message, error) {
+func (t *Transmitter) Send(channelID string, ParentID string, params *discordgo.WebhookParams) (*discordgo.Message, error) {
 	wh, err := t.getOrCreateWebhook(channelID)
 	if err != nil {
 		return nil, err
 	}
 
-	msg, err := t.session.WebhookExecute(wh.ID, wh.Token, true, params)
-	if err != nil {
-		return nil, fmt.Errorf("execute failed: %w", err)
-	}
+	//if parentid is filled use webhookThreadExecute instead.
+	var msg *discordgo.Message
+	if ParentID != "" {
+		msg, err = t.session.WebhookThreadExecute(wh.ID, wh.Token, true, ParentID, params)
+		if err != nil {
+			return nil, fmt.Errorf("execute failed: %w", err)
+		}
 
+	} else {
+		msg, err = t.session.WebhookExecute(wh.ID, wh.Token, true, params)
+		if err != nil {
+			return nil, fmt.Errorf("execute failed: %w", err)
+		}
+	}
 	return msg, nil
 }
 
@@ -86,6 +95,7 @@ func (t *Transmitter) Edit(channelID string, messageID string, params *discordgo
 	}
 
 	uri := discordgo.EndpointWebhookToken(wh.ID, wh.Token) + "/messages/" + messageID
+
 	_, err := t.session.RequestWithBucketID("PATCH", uri, params, discordgo.EndpointWebhookToken("", ""))
 	if err != nil {
 		return err
