@@ -214,10 +214,15 @@ func (gw *Gateway) handleMessage(rmsg *config.Message, dest *bridge.Bridge) []*B
 		canonicalParentMsgID = gw.FindCanonicalMsgID(rmsg.Protocol, rmsg.ParentID)
 	}
 
+	var canonicalThreadMsgID string
+	if rmsg.ThreadID != "" && dest.GetBool("PreserveThreading") {
+		canonicalThreadMsgID = gw.FindCanonicalMsgID(rmsg.Protocol, rmsg.ThreadID)
+	}
+
 	channels := gw.getDestChannel(rmsg, *dest)
 	for idx := range channels {
 		channel := &channels[idx]
-		msgID, err := gw.SendMessage(rmsg, dest, channel, canonicalParentMsgID)
+		msgID, err := gw.SendMessage(rmsg, dest, channel, canonicalParentMsgID, canonicalThreadMsgID)
 		if err != nil {
 			gw.logger.Errorf("SendMessage failed: %s", err)
 			continue

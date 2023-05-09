@@ -257,12 +257,14 @@ func (gw *Gateway) getDestChannel(msg *config.Message, dest bridge.Bridge) []con
 }
 
 func (gw *Gateway) getDestMsgID(msgID string, dest *bridge.Bridge, channel *config.ChannelInfo) string {
+	//log the message ID to the console, together with the new channel name, and the bridge Name
 	if res, ok := gw.Messages.Get(msgID); ok {
 		IDs := res.([]*BrMsgID)
 		for _, id := range IDs {
 			// check protocol, bridge name and channelname
 			// for people that reuse the same bridge multiple times. see #342
 			if dest.Protocol == id.br.Protocol && dest.Name == id.br.Name && channel.ID == id.ChannelID {
+				//print the results and the destination.
 				return strings.Replace(id.ID, dest.Protocol+" ", "", 1)
 			}
 		}
@@ -433,6 +435,7 @@ func (gw *Gateway) SendMessage(
 	dest *bridge.Bridge,
 	channel *config.ChannelInfo,
 	canonicalParentMsgID string,
+	canonicalThreadMsgID string,
 ) (string, error) {
 	msg := *rmsg
 	// Only send the avatar download event to ourselves.
@@ -481,6 +484,19 @@ func (gw *Gateway) SendMessage(
 	// this means that we didn't find it in the cache so set it to a "msg-parent-not-found" constant
 	if msg.ParentID == "" && rmsg.ParentID != "" {
 		msg.ParentID = config.ParentIDNotFound
+	}
+	if msg.ParentID != "" && dest.Protocol == "discord" {
+		msg.Channel = msg.ParentID
+	}
+
+	msg.ThreadID = gw.getDestMsgID(canonicalThreadMsgID, dest, channel)
+	if msg.ThreadID == "" {
+		msg.ThreadID = strings.Replace(canonicalThreadMsgID, dest.Protocol+" ", "", 1)
+	}
+	//if the parent id is set, replace the channel id with the parent id, but only when the destination is discord, because it's actually a thread.
+
+	if msg.ThreadID == "" && rmsg.ParentID != "" {
+		msg.ThreadID = config.ParentIDNotFound
 	}
 
 	drop, err := gw.modifyOutMessageTengo(rmsg, &msg, dest)

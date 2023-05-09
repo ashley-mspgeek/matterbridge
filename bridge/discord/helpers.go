@@ -139,7 +139,6 @@ func (b *Bdiscord) getCategoryChannelID(name string) string {
 }
 
 func (b *Bdiscord) getChannelName(id string) string {
-	b.Log.Infof("getChannelName(%s)", id)
 	b.channelsMutex.RLock()
 	defer b.channelsMutex.RUnlock()
 

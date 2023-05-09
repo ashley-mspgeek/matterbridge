@@ -2,6 +2,7 @@ package bslack
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"regexp"
@@ -564,21 +565,35 @@ func (b *Bslack) prepareMessageOptions(msg *config.Message) []slack.MsgOption {
 			attachments = append(attachments, attach.([]slack.Attachment)...)
 		}
 	}
-
+	jsonBytes, err := json.MarshalIndent(msg, "", "  ")
+	if err != nil {
+		b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
+	} else {
+		b.Log.Infof("This is the entire object: %s", string(jsonBytes))
+	}
 	// add a manual attachment if the text contains three pipes (|||)
 	if strings.Contains(msg.Text, "|||") {
 		//split the text based on three pipes, use the first section as the author name and the second as the message, use the final as the message text.
 		splitText := strings.Split(msg.Text, "|||")
-		b.Log.Infof("Split text: %s", splitText)
-		attachment := slack.Attachment{
-			AuthorName: splitText[0] + " said:",
-			Text:       splitText[1],
-			AuthorIcon: splitText[3],
-			Footer:     "Posted in " + splitText[4] + " at " + splitText[5],
-			Color:      "#D0D0D0",
+		//check if the splittext length is big enough, if so, process.
+		if len(splitText) >= 6 {
+			//split the channel on ID: so we only get the channel name.
+			JumpChannel := strings.Split(msg.Channel, ":")[1]
+			timestamp := strings.ReplaceAll(msg.ThreadID, ".", "")
+			var msglink string
+			if timestamp != "" {
+				msglink = " <https://kelvinsamazin-w5x4656.slack.com/archives/" + JumpChannel + "/p" + timestamp + "| view message>"
+			}
+			attachment := slack.Attachment{
+				AuthorName: splitText[0] + " said:",
+				Text:       splitText[1],
+				AuthorIcon: splitText[3],
+				Footer:     "Posted in " + splitText[4] + " at " + splitText[5] + msglink,
+				Color:      "#D0D0D0",
+			}
+			msg.Text = splitText[2]
+			attachments = append(attachments, attachment)
 		}
-		msg.Text = splitText[2]
-		attachments = append(attachments, attachment)
 	}
 
 	var opts []slack.MsgOption
