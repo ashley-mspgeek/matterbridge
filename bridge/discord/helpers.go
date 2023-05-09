@@ -1,6 +1,7 @@
 package bdiscord
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"regexp"
@@ -139,12 +140,13 @@ func (b *Bdiscord) getCategoryChannelID(name string) string {
 }
 
 func (b *Bdiscord) getChannelName(id string) string {
+	b.Log.Infof("getChannelName(%s)", id)
 	b.channelsMutex.RLock()
 	defer b.channelsMutex.RUnlock()
 
 	for _, c := range b.channelInfoMap {
 		if c.Name == "ID:"+id {
-			// if we have ID: specified in our gateway configuration return this
+			// if we have ID: specified in our gateway configuration return this, if the name is found.
 			return c.Name
 		}
 	}
@@ -187,9 +189,24 @@ var (
 )
 
 func (b *Bdiscord) replaceChannelMentions(text string) string {
+	jsonBytes, err := json.MarshalIndent(text, "", "  ")
+	if err != nil {
+		b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
+	} else {
+		b.Log.Infof("This is the entire object: %s", string(jsonBytes))
+	}
 	replaceChannelMentionFunc := func(match string) string {
 		channelID := match[2 : len(match)-1]
-		channelName := b.getChannelName(channelID)
+		b.Log.Infof("Trying:" + channelID)
+
+		var channelName string
+		for _, channel := range b.channels {
+			b.Log.Infof("Looping channel list looking for " + channelID + " now at: " + channel.Name + " with ID: " + channel.ID)
+			if channel.ID == channelID {
+				channelName = channel.Name
+				break
+			}
+		}
 
 		// If we don't have the channel refresh our list.
 		if channelName == "" {
