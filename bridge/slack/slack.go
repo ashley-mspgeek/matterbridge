@@ -573,12 +573,11 @@ func (b *Bslack) prepareMessageOptions(msg *config.Message) []slack.MsgOption {
 		attachment := slack.Attachment{
 			AuthorName: splitText[0] + " said:",
 			Text:       splitText[1],
-			Pretext:    splitText[2],
 			AuthorIcon: splitText[3],
 			Footer:     "Posted in " + splitText[4] + " at " + splitText[5],
 			Color:      "#D0D0D0",
 		}
-		msg.Text = splitText[1]
+		msg.Text = splitText[2]
 		attachments = append(attachments, attachment)
 	}
 
