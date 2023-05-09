@@ -1,7 +1,6 @@
 package gateway
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -212,12 +211,7 @@ func (gw *Gateway) mapChannels() error {
 
 func (gw *Gateway) getDestChannel(msg *config.Message, dest bridge.Bridge) []config.ChannelInfo {
 	var channels []config.ChannelInfo
-	jsonBytes, err := json.MarshalIndent(msg, "", "  ")
-	if err != nil {
-		gw.logger.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
-	} else {
-		gw.logger.Infof("This is the entire object: %s", string(jsonBytes))
-	}
+
 	// for messages received from the api check that the gateway is the specified one
 	if msg.Protocol == apiProtocol && gw.Name != msg.Gateway {
 		return channels

@@ -1,7 +1,6 @@
 package bdiscord
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"regexp"
@@ -189,19 +188,11 @@ var (
 )
 
 func (b *Bdiscord) replaceChannelMentions(text string) string {
-	jsonBytes, err := json.MarshalIndent(text, "", "  ")
-	if err != nil {
-		b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
-	} else {
-		b.Log.Infof("This is the entire object: %s", string(jsonBytes))
-	}
+
 	replaceChannelMentionFunc := func(match string) string {
 		channelID := match[2 : len(match)-1]
-		b.Log.Infof("Trying:" + channelID)
-
 		var channelName string
 		for _, channel := range b.channels {
-			b.Log.Infof("Looping channel list looking for " + channelID + " now at: " + channel.Name + " with ID: " + channel.ID)
 			if channel.ID == channelID {
 				channelName = channel.Name
 				break
