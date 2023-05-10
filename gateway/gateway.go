@@ -16,7 +16,6 @@ import (
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/kyokomi/emoji/v2"
 	"github.com/sirupsen/logrus"
-	"encoding/json"
 	"github.com/slack-go/slack"
 )
 
@@ -123,6 +122,7 @@ func (gw *Gateway) checkConfig(cfg *config.Bridge) {
 
 // AddConfig associates a new configuration with the gateway object.
 func (gw *Gateway) AddConfig(cfg *config.Gateway) error {
+
 	gw.Name = cfg.Name
 	gw.MyConfig = cfg
 	if err := gw.mapChannels(); err != nil {
@@ -259,7 +259,8 @@ func (gw *Gateway) getDestChannel(msg *config.Message, dest bridge.Bridge) []con
 }
 
 func (gw *Gateway) getDestMsgID(msgID string, dest *bridge.Bridge, channel *config.ChannelInfo) string {
-	//log the message ID to the console, together with the new channel name, and the bridge Name
+	//log the message ID to the console, together with the new channel name, and the bridge name
+	gw.logger.Infof("Message ID: %s, Channel: %s, Bridge: %s", msgID, channel.Name, dest.Name)
 	if res, ok := gw.Messages.Get(msgID); ok {
 		IDs := res.([]*BrMsgID)
 		for _, id := range IDs {
@@ -452,11 +453,17 @@ func (gw *Gateway) SendMessage(
 		}
 	}
 
+	// Only send irc notices to irc
+	if msg.Event == config.EventNoticeIRC && dest.Protocol != "irc" {
+		return "", nil
+	}
+
 	// Too noisy to log like other events
 	debugSendMessage := ""
 	if msg.Event != config.EventUserTyping {
 		debugSendMessage = fmt.Sprintf("=> Sending %#v from %s (%s) to %s (%s)", msg, msg.Account, rmsg.Channel, dest.Account, channel.Name)
 	}
+
 	msg.Channel = channel.Name
 	msg.Avatar = gw.modifyAvatar(rmsg, dest)
 	msg.Username = gw.modifyUsername(rmsg, dest)
@@ -481,25 +488,33 @@ func (gw *Gateway) SendMessage(
 	if msg.ParentID == "" && rmsg.ParentID != "" {
 		msg.ParentID = config.ParentIDNotFound
 	}
-var fromURL string
-if extra, ok := msg.Extra["slack_attachment"]; ok {
-	for _, attachment := range extra {
-		if a, ok := attachment.([]slack.Attachment); ok {
-			for _, attach := range a {
-				if attach.FromURL != "" {
-					fromURL = attach.Ts.String()
-					break
+	var fromURL string
+	if extra, ok := msg.Extra["slack_attachment"]; ok {
+		for _, attachment := range extra {
+			if a, ok := attachment.([]slack.Attachment); ok {
+				for _, attach := range a {
+					if attach.FromURL != "" {
+						fromURL = attach.Ts.String()
+						break
+					}
 				}
 			}
 		}
+		canonicalSource := rmsg.Protocol
+		msg.ThreadID = gw.getDestMsgID(canonicalSource+" "+fromURL, dest, channel)
+		gw.logger.Infof("Thread ID is %s but fromURL is %s", msg.ThreadID, fromURL)
+
+	} else {
+		msg.ThreadID = gw.getDestMsgID(canonicalThreadMsgID, dest, channel)
+		if msg.ThreadID == "" {
+			msg.ThreadID = strings.Replace(canonicalThreadMsgID, dest.Protocol+" ", "", 1)
+		}
 	}
-	msg.ThreadID = gw.getDestMsgID("slack "+fromURL, dest, channel)
-	gw.logger.Infof("Thread ID is %s but fromURL is %s", msg.ThreadID, fromURL)
-} else {
-	msg.ThreadID = gw.getDestMsgID(canonicalThreadMsgID, dest, channel)
-	if msg.ThreadID == "" {
-		msg.ThreadID = strings.Replace(canonicalThreadMsgID, dest.Protocol+" ", "", 1)
+
+	if msg.ThreadID == "" && rmsg.ParentID != "" {
+		//msg.ThreadID = config.ParentIDNotFound
 	}
+
 	drop, err := gw.modifyOutMessageTengo(rmsg, &msg, dest)
 	if err != nil {
 		gw.logger.Errorf("modifySendMessageTengo: %s", err)
@@ -533,12 +548,6 @@ if extra, ok := msg.Extra["slack_attachment"]; ok {
 		gw.logger.Debugf("mID %s: %s", dest.Account, mID)
 		return mID, nil
 		// brMsgIDs = append(brMsgIDs, &BrMsgID{dest, dest.Protocol + " " + mID, channel.ID})
-	}
-	jsonBytes, err := json.MarshalIndent(rmsg, "", "  ")
-	if err != nil {
-		gw.logger.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
-	} else {
-		gw.logger.Infof("This is the entire object: \n %s", string(jsonBytes))
 	}
 	return "", nil
 }
