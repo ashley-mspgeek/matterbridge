@@ -258,6 +258,11 @@ func (b *Bdiscord) Send(msg config.Message) (string, error) {
 	}
 
 	if msg.Event == config.EventUserTyping {
+	// If the UserID is empty, the event is from a bot.
+    // In this case, we don't trigger a typing event.
+    	if msg.UserID == "" {
+        	return "", nil
+    	}
 		if b.GetBool("ShowUserTyping") {
 			err := b.c.ChannelTyping(channelID)
 			return "", err
