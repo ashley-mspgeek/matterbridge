@@ -452,9 +452,9 @@ func (gw *Gateway) SendMessage(
 	}
 	jsonBytes, err := json.MarshalIndent(rmsg, "", "  ")
 	if err != nil {
-		b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
+		gw.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
 	} else {
-		b.Log.Infof("This is the entire object: \n %s", string(jsonBytes))
+		gw.Log.Infof("This is the entire object: \n %s", string(jsonBytes))
 	}
 	// Only send irc notices to irc
 	if msg.Event == config.EventNoticeIRC && dest.Protocol != "irc" {
