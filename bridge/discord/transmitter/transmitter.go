@@ -103,8 +103,7 @@ func (t *Transmitter) Send(channelID string, ParentID string, params *discordgo.
 
 	return msg, nil
 }
-
-}
+//}
 // Send transmits a message to the given channel with the provided webhook data, and waits until Discord responds with message data.
 //func (t *Transmitter) Send(channelID string, ParentID string, params *discordgo.WebhookParams) (*discordgo.Message, error) {
 //	wh, err := t.getOrCreateWebhook(channelID)
