@@ -186,7 +186,7 @@ func (b *Bslack) Disconnect() error {
 func (b *Bslack) replaceSpacesInMentions(text string) string {
 	re := regexp.MustCompile(`@\S+`)
 	return re.ReplaceAllStringFunc(text, func(match string) string {
-		return strings.ReplaceAll(match, " ", "-")
+		return strings.ReplaceAll(match, " ", "")
 	})
 }
 

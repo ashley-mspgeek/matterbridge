@@ -156,7 +156,7 @@ func (b *Bslack) replaceMention(text string) string {
 		userID := re.FindStringSubmatch(s)[1]
 		user := b.users.getUsername(userID)
 		username := user
-		return "@" + strings.ReplaceAll(username, " ", "-")
+		return "@" + strings.ReplaceAll(username, " ", "")
 	})
 }
 

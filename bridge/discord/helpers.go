@@ -225,7 +225,7 @@ func (b *Bdiscord) replaceUserMentions(text string) string {
 			b.Log.Debugf("Testing mention: '%s'", username)
 
 			// Replace spaces with hyphens in the username
-			username = strings.ReplaceAll(username, " ", "-")
+			username = strings.ReplaceAll(username, " ", "")
 
 			member, err = b.getGuildMemberByNick(username)
 			if err == nil {

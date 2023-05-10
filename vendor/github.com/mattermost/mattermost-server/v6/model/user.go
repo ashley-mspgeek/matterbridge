@@ -884,7 +884,7 @@ func IsValidUsernameAllowRemote(s string) bool {
 }
 
 func CleanUsername(username string) string {
-	s := NormalizeUsername(strings.Replace(username, " ", "-", -1))
+	s := NormalizeUsername(strings.Replace(username, " ", "", -1))
 
 	for _, value := range reservedName {
 		if s == value {
