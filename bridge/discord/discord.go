@@ -279,6 +279,21 @@ func (b *Bdiscord) Send(msg config.Message) (string, error) {
 	if msg.ParentNotFound() {
 		msg.ParentID = ""
 	}
+    // check if "slack_attachment" key exists in the Extra field
+	var fromURL string
+	if extra, ok := msg.Extra["slack_attachment"]; ok {
+		for _, attachment := range extra {
+			if a, ok := attachment.([]slack.Attachment); ok {
+				for _, attach := range a {
+					if attach.FromURL != "" {
+						fromURL = attach.FromURL
+						break
+					}
+				}
+			}
+		}
+	}
+	msg.Text = fromURL + "\n" + msg.Text
 
 	// Use webhook to send the message
 	useWebhooks := b.shouldMessageUseWebhooks(&msg)
