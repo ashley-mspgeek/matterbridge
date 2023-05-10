@@ -4,6 +4,7 @@ import (
 	"github.com/ashley-mspgeek/matterbridge/bridge/config"
 	"github.com/bwmarrin/discordgo"
 	"github.com/davecgh/go-spew/spew"
+	"encoding/json"
 )
 
 func (b *Bdiscord) messageDelete(s *discordgo.Session, m *discordgo.MessageDelete) { //nolint:unparam
@@ -160,8 +161,11 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 				authorName := "@" + m.ReferencedMessage.Author.Username
 				authorIcon := "https://cdn.discordapp.com/avatars/" + m.ReferencedMessage.Author.ID + "/" + m.ReferencedMessage.Author.Avatar + ".jpg"
 				originalMessageContent := m.ReferencedMessage.Content
-                if originalMessageContent == "" {
-                    originalMessageContent = m.ReferencedMessage.Embeds[0].URL
+				jsonBytes, err := json.MarshalIndent(m.ReferencedMessage, "", "  ")
+                if err != nil {
+                    b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
+                } else {
+                    b.Log.Infof("This is the entire object: \n %s", string(jsonBytes))
                 }
 				channelName := b.replaceChannelMentions("<#" + m.ReferencedMessage.ChannelID + ">")
 				rmsg.Text = authorName + "|||" + originalMessageContent + "|||" + rmsg.Text + "|||" + authorIcon + "|||" + channelName + "|||" + m.ReferencedMessage.Timestamp.Local().Format("2006-01-02 15:04:05")
