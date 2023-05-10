@@ -4,7 +4,7 @@ import (
 	"github.com/ashley-mspgeek/matterbridge/bridge/config"
 	"github.com/bwmarrin/discordgo"
 	"github.com/davecgh/go-spew/spew"
-	"encoding/json"
+	"strings"
 )
 
 func (b *Bdiscord) messageDelete(s *discordgo.Session, m *discordgo.MessageDelete) { //nolint:unparam
