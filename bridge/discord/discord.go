@@ -12,6 +12,7 @@ import (
 	"github.com/ashley-mspgeek/matterbridge/bridge/helper"
 	"github.com/bwmarrin/discordgo"
 	lru "github.com/hashicorp/golang-lru"
+	"github.com/slack-go/slack"
 )
 
 const (
@@ -282,15 +283,18 @@ func (b *Bdiscord) Send(msg config.Message) (string, error) {
    // Check for slack_attachment in Extra map and get FromURL
    var fromURL string
    if extra, ok := msg.Extra["slack_attachment"]; ok {
-	   if a, ok := extra[0].([]interface{}); ok && len(a) > 0 {
-		   if attach, ok := a[0].(map[string]interface{}); ok {
-			   if url, ok := attach["from_url"].(string); ok {
-				   fromURL = url
+	   for _, attachment := range extra {
+		   if a, ok := attachment.([]slack.Attachment); ok {
+			   for _, attach := range a {
+				   if attach.FromURL != "" {
+					   fromURL = attach.FromURL
+					   break
+				   }
 			   }
 		   }
 	   }
+	   msg.Text = fromURL + "\n" + msg.Text
    }
-   msg.Text = fromURL + "\n" + msg.Text	 
 
 	// Use webhook to send the message
 	useWebhooks := b.shouldMessageUseWebhooks(&msg)
