@@ -3,7 +3,7 @@
 package bridgemap
 
 import (
-	bmumble "github.com/KelvinTegelaar/matterbridge/bridge/mumble"
+	bmumble "github.com/ashley_mspgeek/matterbridge/bridge/mumble"
 )
 
 func init() {

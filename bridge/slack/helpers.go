@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/KelvinTegelaar/matterbridge/bridge/config"
+	"github.com/ashley_mspgeek/matterbridge/bridge/config"
 
-	//"github.com/KelvinTegelaar/matterbridge/bridge/discord"
+	//"github.com/ashley_mspgeek/matterbridge/bridge/discord"
 	"github.com/sirupsen/logrus"
 	"github.com/slack-go/slack"
 )

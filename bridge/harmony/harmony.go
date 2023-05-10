@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/KelvinTegelaar/matterbridge/bridge"
-	"github.com/KelvinTegelaar/matterbridge/bridge/config"
+	"github.com/ashley_mspgeek/matterbridge/bridge"
+	"github.com/ashley_mspgeek/matterbridge/bridge/config"
 	"github.com/harmony-development/shibshib"
 	chatv1 "github.com/harmony-development/shibshib/gen/chat/v1"
 	typesv1 "github.com/harmony-development/shibshib/gen/harmonytypes/v1"

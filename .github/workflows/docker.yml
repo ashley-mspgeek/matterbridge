@@ -26,7 +26,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: 42wim/matterbridge,ghcr.io/KelvinTegelaar/matterbridge
+          images: 42wim/matterbridge,ghcr.io/ashley_mspgeek/matterbridge
           flavor: |
             latest=true
           tags: |

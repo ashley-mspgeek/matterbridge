@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/KelvinTegelaar/matterbridge/bridge"
-	"github.com/KelvinTegelaar/matterbridge/bridge/config"
-	"github.com/KelvinTegelaar/matterbridge/bridge/helper"
+	"github.com/ashley_mspgeek/matterbridge/bridge"
+	"github.com/ashley_mspgeek/matterbridge/bridge/config"
+	"github.com/ashley_mspgeek/matterbridge/bridge/helper"
 
 	"github.com/SevereCloud/vksdk/v2/api"
 	"github.com/SevereCloud/vksdk/v2/events"

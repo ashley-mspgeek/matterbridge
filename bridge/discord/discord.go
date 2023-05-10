@@ -6,10 +6,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/KelvinTegelaar/matterbridge/bridge"
-	"github.com/KelvinTegelaar/matterbridge/bridge/config"
-	"github.com/KelvinTegelaar/matterbridge/bridge/discord/transmitter"
-	"github.com/KelvinTegelaar/matterbridge/bridge/helper"
+	"github.com/ashley_mspgeek/matterbridge/bridge"
+	"github.com/ashley_mspgeek/matterbridge/bridge/config"
+	"github.com/ashley_mspgeek/matterbridge/bridge/discord/transmitter"
+	"github.com/ashley_mspgeek/matterbridge/bridge/helper"
 	"github.com/bwmarrin/discordgo"
 	lru "github.com/hashicorp/golang-lru"
 )

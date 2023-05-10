@@ -3,7 +3,7 @@
 package bridgemap
 
 import (
-	bzulip "github.com/KelvinTegelaar/matterbridge/bridge/zulip"
+	bzulip "github.com/ashley_mspgeek/matterbridge/bridge/zulip"
 )
 
 func init() {

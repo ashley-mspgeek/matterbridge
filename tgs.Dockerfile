@@ -5,7 +5,7 @@ RUN apk add \
     go \
     git \
   && cd /go/src/matterbridge \
-  && CGO_ENABLED=0 go build -mod vendor -ldflags "-X github.com/KelvinTegelaar/matterbridge/version.GitHash=$(git log --pretty=format:'%h' -n 1)" -o /bin/matterbridge
+  && CGO_ENABLED=0 go build -mod vendor -ldflags "-X github.com/ashley_mspgeek/matterbridge/version.GitHash=$(git log --pretty=format:'%h' -n 1)" -o /bin/matterbridge
 
 FROM alpine
 RUN apk --no-cache add \

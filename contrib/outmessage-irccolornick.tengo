@@ -1,4 +1,4 @@
-// See https://github.com/KelvinTegelaar/matterbridge/issues/881
+// See https://github.com/ashley_mspgeek/matterbridge/issues/881
 // Generates a colored nick for each msgUsername, with example to filter specific codes 
 
 text := import("text")
