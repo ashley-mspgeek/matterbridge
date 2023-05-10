@@ -73,7 +73,7 @@ func (t *Transmitter) Send(channelID string, ParentID string, params *discordgo.
 		t.Log.Infof("Sending to thread")
 		msg, err = t.session.WebhookThreadExecute(wh.ID, wh.Token, true, ParentID, params)
 		if err != nil {
-			if errD, ok := err.(*discordgo.RESTError); ok && errD.Response.StatusCode == http.StatusNotFound {
+			if errD, ok := err.(*discordgo.RESTError); ok && errD.Response.StatusCode == 404 {
 				t.Log.Infof("Received a 404 error: %v", errD.Message)
 				t.Log.Infof("Thread not found, trying to create Message Thread")
 				thread, err := t.session.MessageThreadStart(channelID, ParentID, params.Content, 60)
