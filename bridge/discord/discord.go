@@ -281,49 +281,9 @@ func (b *Bdiscord) Send(msg config.Message) (string, error) {
 		return b.handleEventWebhook(&msg, channelID, "")
 	}
 
-	if msg.ThreadID != "" {
-		b.Log.Infof("Sending the discord message via thandler event webhook using " + msg.ThreadID)
-		return b.handleEventWebhook(&msg, channelID, msg.ThreadID)
-	}
-
-	b.Log.Infof("Sending the discord message via thandler event webhook using " + msg.ParentID)
+	b.Log.Infof("Sending the discord message via thandle event webhook using " + msg.ParentID)
 	return b.handleEventWebhook(&msg, channelID, msg.ParentID)
 }
-//func (b *Bdiscord) Send(msg config.Message) (string, error) {
-//	b.Log.Debugf("=> Receiving %#v", msg)
-//
-//	channelID := b.getChannelID(msg.Channel)
-//	if channelID == "" {
-//		return "", fmt.Errorf("Could not find channelID for %v", msg.Channel)
-//	}
-//
-//	if msg.Event == config.EventUserTyping {
-//		if b.GetBool("ShowUserTyping") {
-//			err := b.c.ChannelTyping(channelID)
-//			return "", err
-//		}
-//		return "", nil
-//	}
-//
-//	// Make a action /me of the message
-//	if msg.Event == config.EventUserAction {
-//		msg.Text = "_" + msg.Text + "_"
-//	}
-//
-//	// Handle prefix hint for unthreaded messages.
-//	if msg.ParentNotFound() {
-//		msg.ParentID = ""
-//	}
-//
-//	// Use webhook to send the message
-//	useWebhooks := b.shouldMessageUseWebhooks(&msg)
-//	if useWebhooks && msg.Event != config.EventMsgDelete && msg.ParentID == "" {
-//		return b.handleEventWebhook(&msg, channelID, "")
-//	}
-//
-//	b.Log.Infof("Sending the discord message via thandle event webhook using " + msg.ParentID)
-//	return b.handleEventWebhook(&msg, channelID, msg.ParentID)
-//}
 
 // handleEventDirect handles events via the bot user
 
