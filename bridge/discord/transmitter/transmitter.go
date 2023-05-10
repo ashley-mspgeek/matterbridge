@@ -72,7 +72,7 @@ func (t *Transmitter) Send(channelID string, ParentID string, params *discordgo.
 	var msg *discordgo.Message
 	if ParentID != "" {
 		t.Log.Infof("Trying to create Message Thread")
-		thread, err := t.session.MessageThreadStart(channelID, ParentID, Text, 60)
+		thread, err := t.session.MessageThreadStart(channelID, ParentID, params.Content, 60)
 		if err != nil {
 			return nil, fmt.Errorf("thread creation failed: %w", err)
 		}
