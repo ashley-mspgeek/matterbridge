@@ -17,6 +17,7 @@ import (
 	"github.com/kyokomi/emoji/v2"
 	"github.com/sirupsen/logrus"
 	"encoding/json"
+	"github.com/slack-go/slack"
 )
 
 type Gateway struct {
@@ -480,16 +481,25 @@ func (gw *Gateway) SendMessage(
 	if msg.ParentID == "" && rmsg.ParentID != "" {
 		msg.ParentID = config.ParentIDNotFound
 	}
-
+var fromURL string
+if extra, ok := msg.Extra["slack_attachment"]; ok {
+	for _, attachment := range extra {
+		if a, ok := attachment.([]slack.Attachment); ok {
+			for _, attach := range a {
+				if attach.FromURL != "" {
+					fromURL = attach.Ts.String()
+					break
+				}
+			}
+		}
+	}
+	msg.ThreadID = gw.getDestMsgID("slack "+fromURL, dest, channel)
+	gw.logger.Infof("Thread ID is %s but fromURL is %s", msg.ThreadID, fromURL)
+} else {
 	msg.ThreadID = gw.getDestMsgID(canonicalThreadMsgID, dest, channel)
 	if msg.ThreadID == "" {
 		msg.ThreadID = strings.Replace(canonicalThreadMsgID, dest.Protocol+" ", "", 1)
 	}
-
-	if msg.ThreadID == "" && rmsg.ParentID != "" {
-		//msg.ThreadID = config.ParentIDNotFound
-	}
-
 	drop, err := gw.modifyOutMessageTengo(rmsg, &msg, dest)
 	if err != nil {
 		gw.logger.Errorf("modifySendMessageTengo: %s", err)
