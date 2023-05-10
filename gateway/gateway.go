@@ -16,6 +16,7 @@ import (
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/kyokomi/emoji/v2"
 	"github.com/sirupsen/logrus"
+	"encoding/json"
 )
 
 type Gateway struct {
@@ -449,7 +450,12 @@ func (gw *Gateway) SendMessage(
 			return "", nil
 		}
 	}
-
+	jsonBytes, err := json.MarshalIndent(rmsg, "", "  ")
+	if err != nil {
+		b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
+	} else {
+		b.Log.Infof("This is the entire object: \n %s", string(jsonBytes))
+	}
 	// Only send irc notices to irc
 	if msg.Event == config.EventNoticeIRC && dest.Protocol != "irc" {
 		return "", nil
