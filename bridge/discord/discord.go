@@ -281,16 +281,13 @@ func (b *Bdiscord) Send(msg config.Message) (string, error) {
 	}
    // Check for slack_attachment in Extra map and get FromURL
     var fromURL string
-    if extra, ok := msg.Extra["slack_attachment"]; ok {
-        attachments := extra.([]interface{})
-        for _, attachment := range attachments {
-            att := attachment.(map[string]interface{})
-            if att["FromURL"] != nil {
-                fromURL = att["FromURL"].(string)
-                break
-            }
-        }
-    }
+	extraMap := make(map[string]interface{})
+	if extra, ok := msg.Extra["slack_attachment"]; ok {
+		extraMap = extra[0].(map[string]interface{})
+		if fromURL, ok := extraMap["FromURL"].(string); ok {
+			msg.Text = fromURL + "\n" + msg.Text
+		}
+	}	
 
     // Prepend FromURL to message Text if it exists
     if fromURL != "" {
