@@ -47,7 +47,6 @@ type Message struct {
 	ID        string    `json:"id"`
 	Extra     map[string][]interface{}
 	ThreadID  string `json:"ThreadID"`
-	Source 	string
 }
 
 func (m Message) ParentNotFound() bool {

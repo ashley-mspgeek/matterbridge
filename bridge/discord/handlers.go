@@ -60,11 +60,7 @@ func (b *Bdiscord) messageTyping(s *discordgo.Session, m *discordgo.TypingStart)
 
 	rmsg := config.Message{Account: b.Account, Event: config.EventUserTyping}
 	rmsg.Channel = b.getChannelName(m.ChannelID)
-
-	// Only send the typing event if the message did not originate from Slack.
-	if rmsg.Source != "slack" {
 		b.Remote <- rmsg
-	}
 }
 
 func (b *Bdiscord) messageUpdate(s *discordgo.Session, m *discordgo.MessageUpdate) { //nolint:unparam

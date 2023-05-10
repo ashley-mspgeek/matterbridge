@@ -382,7 +382,6 @@ func (b *Bslack) handleTypingEvent(ev *slack.UserTypingEvent) (*config.Message, 
 		Channel: channelInfo.Name,
 		Account: b.Account,
 		Event:   config.EventUserTyping,
-		Source: "slack",
 	}, nil
 }
 
