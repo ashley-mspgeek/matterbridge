@@ -616,7 +616,7 @@ func (b *Bslack) prepareMessageOptions(msg *config.Message) []slack.MsgOption {
 }
 
 func (b *Bslack) sanitizeUsername(username string) string {
-	return strings.ReplaceAll(username, " ", "-")
+	return strings.ReplaceAll(username, " ", "")
 }
 
 func (b *Bslack) createAttach(extra map[string][]interface{}) []slack.Attachment {
