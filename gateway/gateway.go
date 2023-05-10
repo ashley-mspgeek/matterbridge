@@ -450,23 +450,18 @@ func (gw *Gateway) SendMessage(
 			return "", nil
 		}
 	}
-	jsonBytes, err := json.MarshalIndent(rmsg, "", "  ")
-	if err != nil {
-		msg.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
-	} else {
-		msg.Log.Infof("This is the entire object: \n %s", string(jsonBytes))
-	}
-	// Only send irc notices to irc
-	if msg.Event == config.EventNoticeIRC && dest.Protocol != "irc" {
-		return "", nil
-	}
 
 	// Too noisy to log like other events
 	debugSendMessage := ""
 	if msg.Event != config.EventUserTyping {
 		debugSendMessage = fmt.Sprintf("=> Sending %#v from %s (%s) to %s (%s)", msg, msg.Account, rmsg.Channel, dest.Account, channel.Name)
 	}
-
+                jsonBytes, err := json.MarshalIndent(m.ReferencedMessage, "", "  ")
+                if err != nil {
+                    gw.logger.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
+                } else {
+                    gw.logger.Infof("This is the entire object: \n %s", string(jsonBytes))
+                }
 	msg.Channel = channel.Name
 	msg.Avatar = gw.modifyAvatar(rmsg, dest)
 	msg.Username = gw.modifyUsername(rmsg, dest)
