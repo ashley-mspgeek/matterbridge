@@ -456,12 +456,6 @@ func (gw *Gateway) SendMessage(
 	if msg.Event != config.EventUserTyping {
 		debugSendMessage = fmt.Sprintf("=> Sending %#v from %s (%s) to %s (%s)", msg, msg.Account, rmsg.Channel, dest.Account, channel.Name)
 	}
-                jsonBytes, err := json.MarshalIndent(m.ReferencedMessage, "", "  ")
-                if err != nil {
-                    gw.logger.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
-                } else {
-                    gw.logger.Infof("This is the entire object: \n %s", string(jsonBytes))
-                }
 	msg.Channel = channel.Name
 	msg.Avatar = gw.modifyAvatar(rmsg, dest)
 	msg.Username = gw.modifyUsername(rmsg, dest)
@@ -529,6 +523,12 @@ func (gw *Gateway) SendMessage(
 		gw.logger.Debugf("mID %s: %s", dest.Account, mID)
 		return mID, nil
 		// brMsgIDs = append(brMsgIDs, &BrMsgID{dest, dest.Protocol + " " + mID, channel.ID})
+	}
+	jsonBytes, err := json.MarshalIndent(rmsg, "", "  ")
+	if err != nil {
+		gw.logger.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
+	} else {
+		gw.logger.Infof("This is the entire object: \n %s", string(jsonBytes))
 	}
 	return "", nil
 }
