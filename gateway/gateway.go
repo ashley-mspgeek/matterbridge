@@ -242,7 +242,9 @@ func (gw *Gateway) getDestChannel(msg *config.Message, dest bridge.Bridge) []con
 		}
 	}
 	for _, channel := range gw.Channels {
-
+		if _, ok := gw.Channels[getChannelID(msg)]; !ok {
+			continue
+		}
 		// do samechannelgateway logic
 		if channel.SameChannel[msg.Gateway] {
 			if msg.Channel == channel.Name && msg.Account != dest.Account {
