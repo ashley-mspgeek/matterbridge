@@ -66,13 +66,7 @@ func (t *Transmitter) Send(channelID string, ParentID string, params *discordgo.
 	wh, err := t.getOrCreateWebhook(channelID)
 	if err != nil {
 		return nil, err
-	}
-	func (t *Transmitter) Send(channelID string, ParentID string, params *discordgo.WebhookParams) (*discordgo.Message, error) {
-		wh, err := t.getOrCreateWebhook(channelID)
-		if err != nil {
-			return nil, err
-		}
-	
+	}	
 		//if parentid is filled use webhookThreadExecute instead.
 		var msg *discordgo.Message
 		if ParentID != "" {
