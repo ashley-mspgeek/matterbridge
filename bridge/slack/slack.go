@@ -232,6 +232,10 @@ func (b *Bslack) Reload(cfg *bridge.Config) (string, error) {
 }
 
 func (b *Bslack) Send(msg config.Message) (string, error) {
+	// If this is a typing event that originated from Discord, ignore it.
+    if msg.Event == config.EventUserTyping && msg.Protocol == "discord" {
+        return "", nil
+    }
 	// Too noisy to log like other events
 	if msg.Event != config.EventUserTyping {
 		b.Log.Debugf("=> Receiving %#v", msg)
