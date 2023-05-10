@@ -488,28 +488,29 @@ func (gw *Gateway) SendMessage(
 	if msg.ParentID == "" && rmsg.ParentID != "" {
 		msg.ParentID = config.ParentIDNotFound
 	}
-	var fromURL string
-	if extra, ok := msg.Extra["slack_attachment"]; ok {
-		for _, attachment := range extra {
-			if a, ok := attachment.([]slack.Attachment); ok {
-				for _, attach := range a {
-					if attach.FromURL != "" {
-						fromURL = attach.Ts.String()
-						break
-					}
-				}
-			}
-		}
-		canonicalSource := rmsg.Protocol
-		msg.ThreadID = gw.getDestMsgID(canonicalSource+" "+fromURL, dest, channel)
-		gw.logger.Infof("Thread ID is %s but fromURL is %s", msg.ThreadID, fromURL)
+	   var fromURL string
+    if extra, ok := msg.Extra["slack_attachment"]; ok {
+        for _, attachment := range extra {
+            if a, ok := attachment.([]slack.Attachment); ok {
+                for _, attach := range a {
+                    if attach.FromURL != "" {
+                        fromURL = attach.Ts.String()
+                        break
+                    }
+                }
+            }
+        }
+        canonicalSource := rmsg.Protocol
+        msg.ThreadID = gw.getDestMsgID(canonicalSource+" "+fromURL, dest, channel)
+        msg.Text = msg.Text + "\n*In reply to:* " + "https://discord.com/channels/"+dest.GetString("Server")+"/" + strings.Replace(msg.Channel, "ID:", "", 1) + "/" + strings.Replace(msg.ThreadID, dest.Protocol+" ", "", 1)
+        gw.logger.Infof("Thread ID is %s but fromURL is %s", msg.ThreadID, fromURL)
 
-	} else {
-		msg.ThreadID = gw.getDestMsgID(canonicalThreadMsgID, dest, channel)
-		if msg.ThreadID == "" {
-			msg.ThreadID = strings.Replace(canonicalThreadMsgID, dest.Protocol+" ", "", 1)
-		}
-	}
+    } else {
+        msg.ThreadID = gw.getDestMsgID(canonicalThreadMsgID, dest, channel)
+        if msg.ThreadID == "" {
+            msg.ThreadID = strings.Replace(canonicalThreadMsgID, dest.Protocol+" ", "", 1)
+        }
+    }
 
 	if msg.ThreadID == "" && rmsg.ParentID != "" {
 		//msg.ThreadID = config.ParentIDNotFound
