@@ -17,6 +17,7 @@ import (
 	"github.com/kyokomi/emoji/v2"
 	"github.com/sirupsen/logrus"
 	"encoding/json"
+	"github.com/slack-go/slack"
 )
 
 type Gateway struct {
@@ -270,6 +271,29 @@ func (gw *Gateway) getDestMsgID(msgID string, dest *bridge.Bridge, channel *conf
 			}
 		}
 	}
+		// Check for parent message ID in Slack attachment
+		if extra, ok := gw.Messages.GetExtra(msgID)["slack_attachment"]; ok {
+			for _, attachment := range extra {
+				if a, ok := attachment.([]slack.Attachment); ok {
+					for _, attach := range a {
+						if attach.CallbackID == "parent_msg" && attach.ID != "" {
+							parentID := dest.Protocol + " " + attach.ID
+							if res, ok := gw.Messages.Get(parentID); ok {
+								IDs := res.([]*BrMsgID)
+								for _, id := range IDs {
+									// check protocol, bridge name and channelname
+									// for people that reuse the same bridge multiple times. see #342
+									if dest.Protocol == id.br.Protocol && dest.Name == id.br.Name && channel.ID == id.ChannelID {
+										//print the results and the destination.
+										return strings.Replace(id.ID, dest.Protocol+" ", "", 1)
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	return ""
 }
 
