@@ -13,7 +13,7 @@ import (
 
 	"golang.org/x/image/webp"
 
-	"github.com/ashley_mspgeek/matterbridge/bridge/config"
+	"github.com/ashley-mspgeek/matterbridge/bridge/config"
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"

@@ -6,8 +6,8 @@ import (
 
 	"layeh.com/gumble/gumble"
 
-	"github.com/ashley_mspgeek/matterbridge/bridge/config"
-	"github.com/ashley_mspgeek/matterbridge/bridge/helper"
+	"github.com/ashley-mspgeek/matterbridge/bridge/config"
+	"github.com/ashley-mspgeek/matterbridge/bridge/helper"
 )
 
 func (b *Bmumble) handleServerConfig(event *gumble.ServerConfigEvent) {

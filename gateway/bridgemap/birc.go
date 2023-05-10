@@ -3,7 +3,7 @@
 package bridgemap
 
 import (
-	birc "github.com/ashley_mspgeek/matterbridge/bridge/irc"
+	birc "github.com/ashley-mspgeek/matterbridge/bridge/irc"
 )
 
 func init() {

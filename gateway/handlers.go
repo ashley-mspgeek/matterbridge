@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ashley_mspgeek/matterbridge/bridge"
-	"github.com/ashley_mspgeek/matterbridge/bridge/config"
-	"github.com/ashley_mspgeek/matterbridge/gateway/bridgemap"
+	"github.com/ashley-mspgeek/matterbridge/bridge"
+	"github.com/ashley-mspgeek/matterbridge/bridge/config"
+	"github.com/ashley-mspgeek/matterbridge/gateway/bridgemap"
 )
 
 // handleEventFailure handles failures and reconnects bridges.

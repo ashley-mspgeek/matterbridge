@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ashley_mspgeek/matterbridge/bridge"
-	"github.com/ashley_mspgeek/matterbridge/bridge/config"
-	"github.com/ashley_mspgeek/matterbridge/bridge/helper"
+	"github.com/ashley-mspgeek/matterbridge/bridge"
+	"github.com/ashley-mspgeek/matterbridge/bridge/config"
+	"github.com/ashley-mspgeek/matterbridge/bridge/helper"
 	"github.com/jpillora/backoff"
 	"github.com/matterbridge/go-xmpp"
 	"github.com/rs/xid"

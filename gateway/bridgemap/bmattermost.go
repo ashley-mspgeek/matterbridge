@@ -3,7 +3,7 @@
 package bridgemap
 
 import (
-	bmattermost "github.com/ashley_mspgeek/matterbridge/bridge/mattermost"
+	bmattermost "github.com/ashley-mspgeek/matterbridge/bridge/mattermost"
 )
 
 func init() {

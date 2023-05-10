@@ -1,2 +1,2 @@
 text := import("text")
-msgText=text.re_replace("matterbridge",msgText,"matterbridge (https://github.com/ashley_mspgeek/matterbridge)")
+msgText=text.re_replace("matterbridge",msgText,"matterbridge (https://github.com/ashley-mspgeek/matterbridge)")

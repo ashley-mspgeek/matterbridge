@@ -1,7 +1,7 @@
 FROM alpine:edge as certs
 RUN apk --update add ca-certificates
 ARG VERSION=1.22.3
-ADD https://github.com/ashley_mspgeek/matterbridge/releases/download/v${VERSION}/matterbridge-${VERSION}-linux-arm64 /bin/matterbridge
+ADD https://github.com/ashley-mspgeek/matterbridge/releases/download/v${VERSION}/matterbridge-${VERSION}-linux-arm64 /bin/matterbridge
 RUN chmod +x /bin/matterbridge
 
 FROM scratch

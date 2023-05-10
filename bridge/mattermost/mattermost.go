@@ -6,10 +6,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/ashley_mspgeek/matterbridge/bridge"
-	"github.com/ashley_mspgeek/matterbridge/bridge/config"
-	"github.com/ashley_mspgeek/matterbridge/bridge/helper"
-	"github.com/ashley_mspgeek/matterbridge/matterhook"
+	"github.com/ashley-mspgeek/matterbridge/bridge"
+	"github.com/ashley-mspgeek/matterbridge/bridge/config"
+	"github.com/ashley-mspgeek/matterbridge/bridge/helper"
+	"github.com/ashley-mspgeek/matterbridge/matterhook"
 	"github.com/matterbridge/matterclient"
 	"github.com/rs/xid"
 )

@@ -10,10 +10,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ashley_mspgeek/matterbridge/bridge"
-	"github.com/ashley_mspgeek/matterbridge/bridge/config"
-	"github.com/ashley_mspgeek/matterbridge/bridge/helper"
-	"github.com/ashley_mspgeek/matterbridge/matterhook"
+	"github.com/ashley-mspgeek/matterbridge/bridge"
+	"github.com/ashley-mspgeek/matterbridge/bridge/config"
+	"github.com/ashley-mspgeek/matterbridge/bridge/helper"
+	"github.com/ashley-mspgeek/matterbridge/matterhook"
 	"github.com/bwmarrin/discordgo"
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/rs/xid"
@@ -81,7 +81,7 @@ func New(cfg *bridge.Config) bridge.Bridger {
 	if token != "" && !strings.HasPrefix(token, "xoxb") {
 		cfg.Log.Warn("Non-bot token detected. It is STRONGLY recommended to use a proper bot-token instead.")
 		cfg.Log.Warn("Legacy tokens may be deprecated by Slack at short notice. See the Matterbridge GitHub wiki for a migration guide.")
-		cfg.Log.Warn("See https://github.com/ashley_mspgeek/matterbridge/wiki/Slack-bot-setup")
+		cfg.Log.Warn("See https://github.com/ashley-mspgeek/matterbridge/wiki/Slack-bot-setup")
 		return NewLegacy(cfg)
 	}
 	return newBridge(cfg)

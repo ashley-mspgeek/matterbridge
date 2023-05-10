@@ -8,8 +8,8 @@ import (
 	"mime"
 	"strings"
 
-	"github.com/ashley_mspgeek/matterbridge/bridge/config"
-	"github.com/ashley_mspgeek/matterbridge/bridge/helper"
+	"github.com/ashley-mspgeek/matterbridge/bridge/config"
+	"github.com/ashley-mspgeek/matterbridge/bridge/helper"
 
 	"go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/types"
@@ -227,12 +227,12 @@ func (b *Bwhatsapp) handleImageMessage(msg *events.Message) {
 		return
 	}
 
-	// rename .jfif to .jpg https://github.com/ashley_mspgeek/matterbridge/issues/1292
+	// rename .jfif to .jpg https://github.com/ashley-mspgeek/matterbridge/issues/1292
 	if fileExt[0] == ".jfif" {
 		fileExt[0] = ".jpg"
 	}
 
-	// rename .jpe to .jpg https://github.com/ashley_mspgeek/matterbridge/issues/1463
+	// rename .jpe to .jpg https://github.com/ashley-mspgeek/matterbridge/issues/1463
 	if fileExt[0] == ".jpe" {
 		fileExt[0] = ".jpg"
 	}

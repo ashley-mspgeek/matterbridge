@@ -5,9 +5,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ashley_mspgeek/matterbridge/bridge"
-	"github.com/ashley_mspgeek/matterbridge/bridge/config"
-	"github.com/ashley_mspgeek/matterbridge/bridge/helper"
+	"github.com/ashley-mspgeek/matterbridge/bridge"
+	"github.com/ashley-mspgeek/matterbridge/bridge/config"
+	"github.com/ashley-mspgeek/matterbridge/bridge/helper"
 	"github.com/Philipp15b/go-steam"
 	"github.com/Philipp15b/go-steam/protocol/steamlang"
 	"github.com/Philipp15b/go-steam/steamid"

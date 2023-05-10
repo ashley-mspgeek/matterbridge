@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ashley_mspgeek/matterbridge/bridge/config"
-	"github.com/ashley_mspgeek/matterbridge/bridge/helper"
+	"github.com/ashley-mspgeek/matterbridge/bridge/config"
+	"github.com/ashley-mspgeek/matterbridge/bridge/helper"
 	"github.com/lrstanley/girc"
 	"github.com/paulrosania/go-charset/charset"
 	"github.com/saintfish/chardet"
