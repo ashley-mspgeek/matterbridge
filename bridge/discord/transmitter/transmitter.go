@@ -72,6 +72,15 @@ func (t *Transmitter) Send(channelID string, ParentID string, params *discordgo.
 	//if parentid is filled use webhookThreadExecute instead.
 	var msg *discordgo.Message
 	if ParentID != "" {
+		//if the parentid does not exist, create a new thread channel with channelid as parent
+		if _, err := t.session.Channel(ParentID); err != nil {
+			t.Log.Infof("Trying to create Message Thread")
+			t.session.MessageThreadStart(ParentID, channelID, "Slack Thread", 60)
+			//flip the parentId and ChannelID variables around
+			ParentID, channelID = channelID, ParentID
+
+		}
+		t.Log.Infof("Sending to thread")
 		msg, err = t.session.WebhookThreadExecute(wh.ID, wh.Token, true, ParentID, params)
 		if err != nil {
 			return nil, fmt.Errorf("execute failed: %w", err)
