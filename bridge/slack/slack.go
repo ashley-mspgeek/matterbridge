@@ -582,7 +582,7 @@ func (b *Bslack) prepareMessageOptions(msg *config.Message) []slack.MsgOption {
 			timestamp := strings.ReplaceAll(msg.ThreadID, ".", "")
 			var msglink string
 			if timestamp != "" {
-				msglink = " <https://kelvinsamazin-w5x4656.slack.com/archives/" + JumpChannel + "/p" + timestamp + "| view message>"
+				msglink = " <https://app.slack.com/archives/" + JumpChannel + "/p" + timestamp + "| view message>"
 			}
 			attachment := slack.Attachment{
 				AuthorName: splitText[0] + " said:",
