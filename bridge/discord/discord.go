@@ -280,19 +280,20 @@ func (b *Bdiscord) Send(msg config.Message) (string, error) {
 		msg.ParentID = ""
 	}
    // Check for slack_attachment in Extra map and get FromURL
-    var fromURL string
-	extraMap := make(map[string]interface{})
-	if extra, ok := msg.Extra["slack_attachment"]; ok {
-		extraMap = extra[0].(map[string]interface{})
-		if fromURL, ok := extraMap["FromURL"].(string); ok {
-			msg.Text = fromURL + "\n" + msg.Text
-		}
-	}	
-
-    // Prepend FromURL to message Text if it exists
-    if fromURL != "" {
-        msg.Text = fromURL + "\n" + msg.Text
-    }
+   var fromURL string
+   if extra, ok := msg.Extra["slack_attachment"]; ok {
+	   for _, attachment := range extra {
+		   if a, ok := attachment.([]slack.Attachment); ok {
+			   for _, attach := range a {
+				   if attach.FromURL != "" {
+					   fromURL = attach.FromURL
+					   break
+				   }
+			   }
+		   }
+	   }
+	   msg.Text = fromURL + "\n" + msg.Text
+   }   
 
 	// Use webhook to send the message
 	useWebhooks := b.shouldMessageUseWebhooks(&msg)
