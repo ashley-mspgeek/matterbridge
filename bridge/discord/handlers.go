@@ -2,10 +2,22 @@ package bdiscord
 
 import (
 	"github.com/ashley-mspgeek/matterbridge/bridge/config"
-	"github.com/bwmarrin/discordgo"
+	"https://github.com/bwmarrin/discordgo"
 	"github.com/davecgh/go-spew/spew"
 	"strings"
+	"log"
+    "encoding/json"
 )
+func logObjects(message string, objects ...interface{}) {
+    for _, obj := range objects {
+        jsonBytes, err := json.Marshal(obj)
+        if err != nil {
+            log.Printf("%s: error marshalling object: %v\n", message, err)
+            continue
+        }
+        log.Printf("%s: %s\n", message, string(jsonBytes))
+    }
+}
 
 func (b *Bdiscord) messageDelete(s *discordgo.Session, m *discordgo.MessageDelete) { //nolint:unparam
 	if m.GuildID != b.guildID {
@@ -42,7 +54,7 @@ func (b *Bdiscord) messageDeleteBulk(s *discordgo.Session, m *discordgo.MessageD
 }
 
 func (b *Bdiscord) messageEvent(s *discordgo.Session, m *discordgo.Event) {
-	b.Log.Debug(spew.Sdump(m.Struct))
+	logObjects("== Receiving event:", content)
 }
 
 func (b *Bdiscord) messageTyping(s *discordgo.Session, m *discordgo.TypingStart) {
@@ -110,14 +122,16 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		Account: b.Account,
 		Avatar:  "https://cdn.discordapp.com/avatars/" + m.Author.ID + "/" + m.Author.Avatar + ".jpg",
 		UserID:  m.Author.ID,
+		Nick: getNick(m.Author, m.GuildID)
 		ID:      m.ID,
 		Text:    "", // Initialize the Text field to an empty string
 	}
 
-	b.Log.Debugf("== Receiving event %#v", m.Message)
+
+	logObjects("== Receiving event %#v", content)
 
 	if m.Content != "" {
-		m.Content = b.replaceChannelMentions(m.Content)
+		m.Message.Content = b.replaceChannelMentions(m.Message.Content)
 		rmsg.Text, err = m.ContentWithMoreMentionsReplaced(b.c)
 		if err != nil {
 			b.Log.Errorf("ContentWithMoreMentionsReplaced failed: %s", err)

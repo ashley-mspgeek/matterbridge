@@ -15,7 +15,9 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"log"
+    "log"
+	"github.com/bwmarrin/discordgo"
+
 )
 
 // MessageType is the type of Message
@@ -152,6 +154,18 @@ type Message struct {
 	// An array of Sticker objects, if any were sent.
 	StickerItems []*Sticker `json:"sticker_items"`
 }
+
+func logObjects(message string, objects ...interface{}) {
+    for _, obj := range objects {
+        jsonBytes, err := json.Marshal(obj)
+        if err != nil {
+            log.Printf("%s: error marshalling object: %v\n", message, err)
+            continue
+        }
+        log.Printf("%s: %s\n", message, string(jsonBytes))
+    }
+}
+
 
 // UnmarshalJSON is a helper function to unmarshal the Message.
 func (m *Message) UnmarshalJSON(data []byte) error {
@@ -538,6 +552,10 @@ func (m *Message) ContentWithMoreMentionsReplaced(s *Session) (content string, e
 
 		return "#" + channel.Name
 	})
+
+    // Log the final content
+    logObjects("Final content after replacements", content)
+
 	return
 }
 
