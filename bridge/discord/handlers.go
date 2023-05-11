@@ -111,7 +111,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 	b.Log.Debugf("== Receiving event %#v", m.Message)
 
 	if m.Content != "" {
-		m.Message.Content = b.replaceChannelMentions(m.Message.Content)
+		m.Content = b.replaceChannelMentions(m.Content)
 		rmsg.Text, err = m.ContentWithMoreMentionsReplaced(b.c)
 		if err != nil {
 			b.Log.Errorf("ContentWithMoreMentionsReplaced failed: %s", err)
