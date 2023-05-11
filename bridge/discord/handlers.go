@@ -106,7 +106,13 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		}
 	}
 
-	rmsg := config.Message{Account: b.Account, Avatar: "https://cdn.discordapp.com/avatars/" + m.Author.ID + "/" + m.Author.Avatar + ".jpg", UserID: m.Author.ID, ID: m.ID}
+	rmsg := config.Message{
+		Account: b.Account,
+		Avatar:  "https://cdn.discordapp.com/avatars/" + m.Author.ID + "/" + m.Author.Avatar + ".jpg",
+		UserID:  m.Author.ID,
+		ID:      m.ID,
+		Text:    "", // Initialize the Text field to an empty string
+	}
 
 	b.Log.Debugf("== Receiving event %#v", m.Message)
 
@@ -117,7 +123,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 			b.Log.Errorf("ContentWithMoreMentionsReplaced failed: %s", err)
 			rmsg.Text = m.ContentWithMentionsReplaced()
 		}
-	}
+	}	
 
 	// set channel name
 	rmsg.Channel = b.getChannelName(m.ChannelID)
