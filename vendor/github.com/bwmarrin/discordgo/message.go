@@ -15,6 +15,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"log"
 )
 
 // MessageType is the type of Message
@@ -508,17 +509,20 @@ func (m *Message) ContentWithMoreMentionsReplaced(s *Session) (content string, e
 
 	for _, user := range m.Mentions {
 		nick := user.Username
-
+	
 		member, err := s.State.Member(channel.GuildID, user.ID)
-		if err == nil && member.Nick != "" {
+		if err != nil {
+			log.Printf("Error fetching member info: %s", err)
+		} else if member.Nick != "" {
 			nick = member.Nick
 		}
-
+	
 		content = strings.NewReplacer(
 			"<@"+user.ID+">", "@"+nick,
 			"<@!"+user.ID+">", "@"+nick,
 		).Replace(content)
 	}
+	
 	for _, roleID := range m.MentionRoles {
 		role, err := s.State.Role(channel.GuildID, roleID)
 		if err != nil || !role.Mentionable {
