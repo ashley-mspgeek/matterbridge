@@ -508,19 +508,17 @@ func (m *Message) ContentWithMoreMentionsReplaced(s *Session) (content string, e
 	}
 
 	for _, user := range m.Mentions {
-		nick := user.Username
-	
+		// Retrieve the member from the state if available
 		member, err := s.State.Member(channel.GuildID, user.ID)
-		if err != nil {
-			log.Printf("Error fetching member info: %s", err)
-		} else if member.Nick != "" {
-			nick = member.Nick
+		if err == nil && member.Nick != "" {
+			// Replace the mention with the member's nickname if available
+			content = strings.ReplaceAll(content, "<@"+user.ID+">", "@"+member.Nick)
+			content = strings.ReplaceAll(content, "<@!"+user.ID+">", "@"+member.Nick)
+		} else {
+			// Replace the mention with the username if no nickname is available
+			content = strings.ReplaceAll(content, "<@"+user.ID+">", "@"+user.Username)
+			content = strings.ReplaceAll(content, "<@!"+user.ID+">", "@"+user.Username)
 		}
-	
-		content = strings.NewReplacer(
-			"<@"+user.ID+">", "@"+nick,
-			"<@!"+user.ID+">", "@"+nick,
-		).Replace(content)
 	}
 	
 	for _, roleID := range m.MentionRoles {
