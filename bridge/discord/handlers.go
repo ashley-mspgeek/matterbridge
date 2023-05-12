@@ -128,10 +128,10 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 
     if m.Content != "" {
 		m.Content = b.replaceChannelMentions(m.Content)
-        m.Content, err = m.Message.ContentWithMoreMentionsReplaced(s)
+        rmsg.Text, err = m.Message.ContentWithMoreMentionsReplaced(s)
         if err != nil {
             b.Log.Errorf("ContentWithMoreMentionsReplaced failed: %s", err)
-            m.Content = m.Message.ContentWithMentionsReplaced()
+            rmsg.Text = m.Message.ContentWithMentionsReplaced()
         }
     }
 
