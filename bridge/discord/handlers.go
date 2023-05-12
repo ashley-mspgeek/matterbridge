@@ -121,7 +121,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		Account: b.Account,
 		Avatar: "https://cdn.discordapp.com/avatars/" + m.Author.ID + "/" + m.Author.Avatar + ".jpg",
 		UserID: m.Author.ID,
-		ID: m.ID
+		ID: m.ID,
 	}
 
 	b.Log.Debugf("== Receiving event %#v", m.Message)
