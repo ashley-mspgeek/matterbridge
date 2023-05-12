@@ -173,7 +173,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		if m.ReferencedMessage != nil {
 			authorName := "@" + b.getNick(m.ReferencedMessage.Author, m.GuildID)
 			authorIcon := "https://cdn.discordapp.com/avatars/" + m.ReferencedMessage.Author.ID + "/" + m.ReferencedMessage.Author.Avatar + ".jpg"
-			originalMessageContent :=  b.getNick(m.ReferencedMessage.Content, m.GuildID)
+			originalMessageContent := m.ReferencedMessage.Content
 				jsonBytes, err := json.MarshalIndent(m.ReferencedMessage, "", "  ")
                 if err != nil {
                     b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
@@ -189,6 +189,12 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 			channelName := b.replaceChannelMentions("<#" + m.ReferencedMessage.ChannelID + ">")
 			rmsg.Text = authorName + "|||" + originalMessageContent + "|||" + rmsg.Text + "|||" + authorIcon + "|||" + channelName + "|||" + m.ReferencedMessage.Timestamp.Local().Format("2006-01-02 15:04:05")
 			// Store the original message content and author's name in rmsg.Extra
+			jsonBytes, err := json.MarshalIndent(rmsg, "", "  ")
+			if err != nil {
+				b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
+			} else {
+				b.Log.Infof("This is the entire object: \n %s", string(jsonBytes))
+			}
 
 		}
 	}
@@ -209,6 +215,12 @@ if rmsg.ParentID == "" {
 	b.Log.Debugf("<= Sending message from %s on %s to gateway", m.Author.Username, b.Account)
 	b.Log.Debugf("<= Message is %#v", rmsg)
 	b.Remote <- rmsg
+	jsonBytes, err := json.MarshalIndent(rmsg, "", "  ")
+	if err != nil {
+		b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
+	} else {
+		b.Log.Infof("This is the entire object: \n %s", string(jsonBytes))
+	}
 }
 
 func (b *Bdiscord) memberUpdate(s *discordgo.Session, m *discordgo.GuildMemberUpdate) {
