@@ -219,14 +219,14 @@ func (b *Bdiscord) replaceUserMentions(text string) string {
 			member   *discordgo.Member
 			username string
 		)
-
+	
 		usernames := enumerateUsernames(match[1:])
 		for _, username = range usernames {
 			b.Log.Debugf("Testing mention: '%s'", username)
-
+	
 			// Replace spaces with hyphens in the username
 			username = strings.ReplaceAll(username, " ", "")
-
+	
 			member, err = b.getGuildMemberByNick(username)
 			if err == nil {
 				break
@@ -235,10 +235,16 @@ func (b *Bdiscord) replaceUserMentions(text string) string {
 		if member == nil {
 			return match
 		}
-		return strings.Replace(match, "@"+username, member.User.Mention(), 1)
+	
+		// Create a mention that includes the member's nickname, if they have one
+		mention := "<@"
+		if member.Nick != "" {
+			mention += "!" // The '!' indicates that this is a nickname mention
+		}
+		mention += member.User.ID + ">"
+	
+		return strings.Replace(match, "@"+username, mention, 1)
 	}
-	return userMentionRE.ReplaceAllStringFunc(text, replaceUserMentionFunc)
-}
 
 func replaceEmotes(text string) string {
 	return emoteRE.ReplaceAllString(text, "$1")
