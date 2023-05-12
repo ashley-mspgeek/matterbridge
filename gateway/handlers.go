@@ -15,7 +15,6 @@ import (
 	"github.com/ashley-mspgeek/matterbridge/bridge"
 	"github.com/ashley-mspgeek/matterbridge/bridge/config"
 	"github.com/ashley-mspgeek/matterbridge/gateway/bridgemap"
-	"github.com/bwmarrin/discordgo"
 )
 
 // handleEventFailure handles failures and reconnects bridges.
