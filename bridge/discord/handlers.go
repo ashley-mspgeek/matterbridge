@@ -128,7 +128,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 
     if m.Content != "" {
 		m.Content = b.replaceChannelMentions(m.Content)
-        rmsg.Text, err = m.Message.ContentWithMoreMentionsReplaced(s)
+        rmsg.Text, err = m.Message.ContentWithMoreMentionsReplaced(b.c)
         if err != nil {
             b.Log.Errorf("ContentWithMoreMentionsReplaced failed: %s", err)
             rmsg.Text = m.Message.ContentWithMentionsReplaced()
@@ -169,7 +169,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 	rmsg.ThreadID = ref.MessageID
 	if ref := m.MessageReference; ref != nil && ref.ChannelID == m.ChannelID {
 		if m.ReferencedMessage != nil {
-			authorName := "@" + m.ReferencedMessage.Author.Username
+			authorName := "@" + getNick(m.ReferencedMessage.Author, m.GuildID)
 			authorIcon := "https://cdn.discordapp.com/avatars/" + m.ReferencedMessage.Author.ID + "/" + m.ReferencedMessage.Author.Avatar + ".jpg"
 			originalMessageContent := m.ReferencedMessage.Content
 //				jsonBytes, err := json.MarshalIndent(m.ReferencedMessage, "", "  ")
