@@ -122,7 +122,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		Account: b.Account,
 		Avatar:  "https://cdn.discordapp.com/avatars/" + m.Author.ID + "/" + m.Author.Avatar + ".jpg",
 		UserID:  m.Author.ID,
-		Nick: getNick(m.Author, m.GuildID)
+		Nick: getNick(m.Author, m.GuildID),
 		ID:      m.ID,
 		Text:    "", // Initialize the Text field to an empty string
 	}
