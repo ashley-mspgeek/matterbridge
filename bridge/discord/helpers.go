@@ -213,39 +213,41 @@ func (b *Bdiscord) replaceChannelMentions(text string) string {
 }
 
 func (b *Bdiscord) replaceUserMentions(text string) string {
-	replaceUserMentionFunc := func(match string) string {
-		var (
-			err      error
-			member   *discordgo.Member
-			username string
-		)
+	func (b *Bdiscord) replaceUserMentions(text string) string {
+		replaceUserMentionFunc := func(match string) string {
+			var (
+				err      error
+				member   *discordgo.Member
+				username string
+			)
 	
-		usernames := enumerateUsernames(match[1:])
-		for _, username = range usernames {
-			b.Log.Debugf("Testing mention: '%s'", username)
+			usernames := enumerateUsernames(match[1:])
+			for _, username = range usernames {
+				b.Log.Debugf("Testing mention: '%s'", username)
 	
-			// Replace spaces with hyphens in the username
-			username = strings.ReplaceAll(username, " ", "")
+				// Replace spaces with hyphens in the username
+				username = strings.ReplaceAll(username, " ", "")
 	
-			member, err = b.getGuildMemberByNick(username)
-			if err == nil {
-				break
+				member, err = b.getGuildMemberByNick(username)
+				if err == nil {
+					break
+				}
 			}
-		}
-		if member == nil {
-			return match
-		}
+			if member == nil {
+				return match
+			}
 	
-		// Create a mention that includes the member's nickname, if they have one
-		mention := "<@"
-		if member.Nick != "" {
-			mention += "!" // The '!' indicates that this is a nickname mention
-		}
-		mention += member.User.ID + ">"
+			// Create a mention that includes the member's nickname, if they have one
+			mention := "<@"
+			if member.Nick != "" {
+				mention += "!" // The '!' indicates that this is a nickname mention
+			}
+			mention += member.User.ID + ">"
 	
-		return strings.Replace(match, "@"+username, mention, 1)
-	}
-}
+			return strings.Replace(match, "@"+username, mention, 1)
+		}
+		return userMentionRE.ReplaceAllStringFunc(text, replaceUserMentionFunc)
+	}	
 
 func replaceEmotes(text string) string {
 	return emoteRE.ReplaceAllString(text, "$1")
