@@ -173,7 +173,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		if m.ReferencedMessage != nil {
 			authorName := "@" + b.getNick(m.ReferencedMessage.Author, m.GuildID)
 			authorIcon := "https://cdn.discordapp.com/avatars/" + m.ReferencedMessage.Author.ID + "/" + m.ReferencedMessage.Author.Avatar + ".jpg"
-			originalMessageContent :=  b.replaceChannelMentions(m.ReferencedMessage.Content)
+			originalMessageContent :=  b.getNick(m.ReferencedMessage.Content, m.GuildID)
 				jsonBytes, err := json.MarshalIndent(m.ReferencedMessage, "", "  ")
                 if err != nil {
                     b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
