@@ -137,7 +137,9 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 
 	// set channel name
 	rmsg.Channel = b.getChannelName(m.ChannelID)
+	// inside messageCreate function, just after setting rmsg.Username
 	rmsg.Username = b.getNick(m.Author, m.GuildID)
+	b.Log.Debugf("Username for the message created: %s", rmsg.Username)
 
 	// if we have embedded content add it to text
 	if b.GetBool("ShowEmbeds") && m.Message.Embeds != nil {
