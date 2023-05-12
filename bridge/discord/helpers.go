@@ -245,6 +245,7 @@ func (b *Bdiscord) replaceUserMentions(text string) string {
 	
 		return strings.Replace(match, "@"+username, mention, 1)
 	}
+}
 
 func replaceEmotes(text string) string {
 	return emoteRE.ReplaceAllString(text, "$1")
