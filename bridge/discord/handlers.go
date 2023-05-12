@@ -173,13 +173,13 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		if m.ReferencedMessage != nil {
 			authorName := "@" + b.getNick(m.ReferencedMessage.Author, m.GuildID)
 			authorIcon := "https://cdn.discordapp.com/avatars/" + m.ReferencedMessage.Author.ID + "/" + m.ReferencedMessage.Author.Avatar + ".jpg"
-			originalMessageContent := m.ReferencedMessage.Content
-//				jsonBytes, err := json.MarshalIndent(m.ReferencedMessage, "", "  ")
-//                if err != nil {
-//                    b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
-//                } else {
-//                    b.Log.Infof("This is the entire object: \n %s", string(jsonBytes))
-//                }
+			originalMessageContent := replaceChannelMentions(m.ReferencedMessage.Content)
+				jsonBytes, err := json.MarshalIndent(m.ReferencedMessage, "", "  ")
+                if err != nil {
+                    b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
+                } else {
+                    b.Log.Infof("This is the entire object: \n %s", string(jsonBytes))
+                }
 			urls := make([]string, len(m.ReferencedMessage.Attachments))
 			for i, attachment := range m.ReferencedMessage.Attachments {
 				urls[i] = attachment.URL
@@ -193,7 +193,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		}
 	}
 }
-//rmsg.Text = b.replaceChannelMentions(rmsg.Text)
+rmsg.Text = b.replaceChannelMentions(rmsg.Text)
 if rmsg.ParentID == "" {
 	channel, err := s.Channel(m.ChannelID)
 	if err != nil {
