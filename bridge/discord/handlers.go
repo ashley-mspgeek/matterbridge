@@ -189,12 +189,6 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 			channelName := b.replaceChannelMentions("<#" + m.ReferencedMessage.ChannelID + ">")
 			rmsg.Text = authorName + "|||" + originalMessageContent + "|||" + rmsg.Text + "|||" + authorIcon + "|||" + channelName + "|||" + m.ReferencedMessage.Timestamp.Local().Format("2006-01-02 15:04:05")
 			// Store the original message content and author's name in rmsg.Extra
-			jsonBytes, err := json.MarshalIndent(rmsg, "", "  ")
-			if err != nil {
-				b.Log.Errorf("Failed to marshal MessageCreate to JSON: %v", err)
-			} else {
-				b.Log.Infof("This is the entire object: \n %s", string(jsonBytes))
-			}
 
 		}
 	}
