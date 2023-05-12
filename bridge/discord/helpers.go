@@ -72,6 +72,7 @@ func (b *Bdiscord) getGuildMemberByNick(nick string) (*discordgo.Member, error) 
 	if member, ok := b.nickMemberMap[nick]; ok {
 		return member, nil
 	}
+	b.Log.Warnf("Couldn't find guild member with nick: '%s'", nick)
 	return nil, errors.New("Couldn't find guild member with nick " + nick) // This will most likely get ignored by the caller
 }
 
@@ -232,6 +233,7 @@ func (b *Bdiscord) replaceUserMentions(text string) string {
 			}
 		}
 		if member == nil {
+			b.Log.Warnf("Did not find guild member for username: '%s'", username)
 			return match
 		}
 		// Create a mention that includes the member's nickname, if they have one
