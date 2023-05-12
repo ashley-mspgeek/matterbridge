@@ -2,7 +2,6 @@ package bdiscord
 
 import (
 	"github.com/ashley-mspgeek/matterbridge/bridge/config"
-	"github.com/bwmarrin/discordgo"
 	"strings"
 	"log"
     "encoding/json"
