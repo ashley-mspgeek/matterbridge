@@ -510,10 +510,10 @@ var patternChannels = regexp.MustCompile("<#[^>]*>")
 func (m *Message) ContentWithMoreMentionsReplaced(s *Session) (content string, err error) {
 	content = m.Content
 
-	if !s.StateEnabled {
-		content = m.ContentWithMentionsReplaced()
-		return
-	}
+	//if !s.StateEnabled {
+	//	content = m.ContentWithMentionsReplaced()
+	//	return
+	//}
 
 	channel, err := s.State.Channel(m.ChannelID)
 	if err != nil {
