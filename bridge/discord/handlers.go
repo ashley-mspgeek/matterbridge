@@ -4,6 +4,7 @@ import (
 	"github.com/ashley-mspgeek/matterbridge/bridge/config"
 	"strings"
 	"log"
+	"github.com/bwmarrin/discordgo"
     "encoding/json"
 )
 func logObjects(message string, objects ...interface{}) {
