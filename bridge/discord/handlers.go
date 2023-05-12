@@ -169,7 +169,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 	rmsg.ThreadID = ref.MessageID
 	if ref := m.MessageReference; ref != nil && ref.ChannelID == m.ChannelID {
 		if m.ReferencedMessage != nil {
-			authorName := "@" + getNick(m.ReferencedMessage.Author, m.GuildID)
+			authorName := "@" + b.getNick(m.ReferencedMessage.Author, m.GuildID)
 			authorIcon := "https://cdn.discordapp.com/avatars/" + m.ReferencedMessage.Author.ID + "/" + m.ReferencedMessage.Author.Avatar + ".jpg"
 			originalMessageContent := m.ReferencedMessage.Content
 //				jsonBytes, err := json.MarshalIndent(m.ReferencedMessage, "", "  ")
