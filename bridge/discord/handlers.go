@@ -53,7 +53,7 @@ func (b *Bdiscord) messageDeleteBulk(s *discordgo.Session, m *discordgo.MessageD
 }
 
 func (b *Bdiscord) messageEvent(s *discordgo.Session, m *discordgo.Event) {
-	logObjects("== Receiving event:", content)
+	logObjects("== Receiving event:", m)
 }
 
 func (b *Bdiscord) messageTyping(s *discordgo.Session, m *discordgo.TypingStart) {
