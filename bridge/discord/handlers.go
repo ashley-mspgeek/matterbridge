@@ -137,16 +137,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 
 	// set channel name
 	rmsg.Channel = b.getChannelName(m.ChannelID)
-
-	fromWebhook := m.WebhookID != ""
-	if !fromWebhook && !b.GetBool("UseUserName") {
-		rmsg.Username = b.getNick(m.Author, m.GuildID)
-	} else {
-		rmsg.Username = m.Author.Username
-		if !fromWebhook && b.GetBool("UseDiscriminator") {
-			rmsg.Username += "#" + m.Author.Discriminator
-		}
-	}
+	rmsg.Username = b.getNick(m.Author, m.GuildID)
 
 	// if we have embedded content add it to text
 	if b.GetBool("ShowEmbeds") && m.Message.Embeds != nil {
