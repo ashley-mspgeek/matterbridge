@@ -126,14 +126,14 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 
 	b.Log.Debugf("== Receiving event %#v", m.Message)
 
-	if m.Content != "" {
-		m.Message.Content = b.replaceChannelMentions(m.Message.Content)
-		rmsg.Text, err = m.ContentWithMoreMentionsReplaced(b.c)
-		if err != nil {
-			b.Log.Errorf("ContentWithMoreMentionsReplaced failed: %s", err)
-			rmsg.Text = m.ContentWithMentionsReplaced()
-		}
-	}
+    if m.Content != "" {
+        m.Content = b.replaceChannelMentions(m.Content)
+        m.Content, err = m.Message.ContentWithMoreMentionsReplaced(s)
+        if err != nil {
+            b.Log.Errorf("ContentWithMoreMentionsReplaced failed: %s", err)
+            m.Content = m.Message.ContentWithMentionsReplaced()
+        }
+    }
 
 	// set channel name
 	rmsg.Channel = b.getChannelName(m.ChannelID)
